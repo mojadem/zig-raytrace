@@ -1,27 +1,24 @@
 const std = @import("std");
-const zig_raytrace = @import("zig_raytrace");
 
 pub fn main() !void {
-    // Prints to stderr, ignoring potential errors.
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
-    try zig_raytrace.bufferedPrint();
-}
+    var buf: [1024]u8 = undefined;
+    var w = std.fs.File.stdout().writer(&buf);
+    const stdout = &w.interface;
+    const stderr = std.debug;
 
-test "simple test" {
-    const gpa = std.testing.allocator;
-    var list: std.ArrayList(i32) = .empty;
-    defer list.deinit(gpa); // Try commenting this out and see if zig detects the memory leak!
-    try list.append(gpa, 42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
-}
+    const width = 256;
+    const height = width;
+    const max = width - 1;
 
-test "fuzz example" {
-    const Context = struct {
-        fn testOne(context: @This(), input: []const u8) anyerror!void {
-            _ = context;
-            // Try passing `--fuzz` to `zig build test` and see if it manages to fail this test case!
-            try std.testing.expect(!std.mem.eql(u8, "canyoufindme", input));
+    try stdout.print("P3\n{d} {d}\n{d}\n", .{ width, height, max });
+    try stdout.flush();
+
+    for (0..height) |j| {
+        stderr.print("\r\x1b[KScanlines remaining: {d} ", .{height - j});
+        for (0..width) |i| {
+            try stdout.print("{d} {d} {d}\n", .{ i, j, 0 });
+            try stdout.flush();
         }
-    };
-    try std.testing.fuzz(Context{}, Context.testOne, .{});
+    }
+    stderr.print("\r\x1b[KDone.\n", .{});
 }
