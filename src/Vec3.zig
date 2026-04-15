@@ -1,18 +1,19 @@
 const Vec3 = @This();
+const T = f64;
 
-x: f64 = 0,
-y: f64 = 0,
-z: f64 = 0,
+x: T = 0,
+y: T = 0,
+z: T = 0,
 
 pub fn add(self: Vec3, other: Vec3) Vec3 {
     return .{ .x = self.x + other.x, .y = self.y + other.y, .z = self.z + other.z };
 }
 
-pub fn scale(self: Vec3, t: f64) Vec3 {
+pub fn scale(self: Vec3, t: T) Vec3 {
     return .{ .x = self.x * t, .y = self.y * t, .z = self.z * t };
 }
 
-pub fn div(self: Vec3, t: f64) Vec3 {
+pub fn div(self: Vec3, t: T) Vec3 {
     return self.scale(1 / t);
 }
 
@@ -20,15 +21,15 @@ pub fn negate(self: Vec3) Vec3 {
     return self.scale(-1);
 }
 
-pub fn len_sq(self: Vec3) f64 {
+pub fn len_sq(self: Vec3) T {
     return self.x * self.x + self.y * self.y + self.z * self.z;
 }
 
-pub fn len(self: Vec3) f64 {
+pub fn len(self: Vec3) T {
     return @sqrt(self.len_sq());
 }
 
-pub fn dot(self: Vec3, other: Vec3) f64 {
+pub fn dot(self: Vec3, other: Vec3) T {
     return self.x * other.x + self.y * other.y + self.z * other.z;
 }
 
@@ -46,7 +47,7 @@ pub fn unit(self: Vec3) Vec3 {
 
 const std = @import("std");
 
-fn expectEq(expected: f64, actual: f64) !void {
+fn expectEq(expected: T, actual: T) !void {
     try std.testing.expectApproxEqAbs(expected, actual, 1e-10);
 }
 
