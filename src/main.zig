@@ -1,4 +1,6 @@
 const std = @import("std");
+const color = @import("Color.zig");
+const Color = color.Color;
 
 pub fn main() !void {
     var buf: [1024]u8 = undefined;
@@ -16,7 +18,13 @@ pub fn main() !void {
     for (0..height) |j| {
         stderr.print("\r\x1b[KScanlines remaining: {d} ", .{height - j});
         for (0..width) |i| {
-            try stdout.print("{d} {d} {d}\n", .{ i, j, 0 });
+            const c = Color{
+                .x = @as(f64, @floatFromInt(i)) / max,
+                .y = @as(f64, @floatFromInt(j)) / max,
+                .z = 0,
+            };
+            try color.writeColor(stdout, c);
+            try stdout.print("\n", .{});
             try stdout.flush();
         }
     }
