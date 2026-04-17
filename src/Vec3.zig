@@ -1,39 +1,39 @@
-const Vec3 = @This();
+const Self = @This();
 const T = f64;
 
 x: T = 0,
 y: T = 0,
 z: T = 0,
 
-pub fn add(self: Vec3, other: Vec3) Vec3 {
+pub fn add(self: Self, other: Self) Self {
     return .{ .x = self.x + other.x, .y = self.y + other.y, .z = self.z + other.z };
 }
 
-pub fn scale(self: Vec3, t: T) Vec3 {
+pub fn scale(self: Self, t: T) Self {
     return .{ .x = self.x * t, .y = self.y * t, .z = self.z * t };
 }
 
-pub fn div(self: Vec3, t: T) Vec3 {
+pub fn div(self: Self, t: T) Self {
     return self.scale(1 / t);
 }
 
-pub fn negate(self: Vec3) Vec3 {
+pub fn negate(self: Self) Self {
     return self.scale(-1);
 }
 
-pub fn len_sq(self: Vec3) T {
+pub fn len_sq(self: Self) T {
     return self.x * self.x + self.y * self.y + self.z * self.z;
 }
 
-pub fn len(self: Vec3) T {
+pub fn len(self: Self) T {
     return @sqrt(self.len_sq());
 }
 
-pub fn dot(self: Vec3, other: Vec3) T {
+pub fn dot(self: Self, other: Self) T {
     return self.x * other.x + self.y * other.y + self.z * other.z;
 }
 
-pub fn cross(self: Vec3, other: Vec3) Vec3 {
+pub fn cross(self: Self, other: Self) Self {
     return .{
         .x = self.y * other.z - self.z * other.y,
         .y = self.z * other.x - self.x * other.z,
@@ -41,7 +41,7 @@ pub fn cross(self: Vec3, other: Vec3) Vec3 {
     };
 }
 
-pub fn unit(self: Vec3) Vec3 {
+pub fn unit(self: Self) Self {
     return self.div(self.len());
 }
 
@@ -52,8 +52,8 @@ fn expectEq(expected: T, actual: T) !void {
 }
 
 test "add" {
-    const a = Vec3{ .x = 1, .y = 2, .z = 3 };
-    const b = Vec3{ .x = 4, .y = 5, .z = 6 };
+    const a = Self{ .x = 1, .y = 2, .z = 3 };
+    const b = Self{ .x = 4, .y = 5, .z = 6 };
     const result = a.add(b);
     try expectEq(5, result.x);
     try expectEq(7, result.y);
@@ -61,7 +61,7 @@ test "add" {
 }
 
 test "scale" {
-    const v = Vec3{ .x = 1, .y = 2, .z = 3 };
+    const v = Self{ .x = 1, .y = 2, .z = 3 };
     const result = v.scale(2);
     try expectEq(2, result.x);
     try expectEq(4, result.y);
@@ -69,7 +69,7 @@ test "scale" {
 }
 
 test "div" {
-    const v = Vec3{ .x = 2, .y = 4, .z = 6 };
+    const v = Self{ .x = 2, .y = 4, .z = 6 };
     const result = v.div(2);
     try expectEq(1, result.x);
     try expectEq(2, result.y);
@@ -77,7 +77,7 @@ test "div" {
 }
 
 test "negate" {
-    const v = Vec3{ .x = 1, .y = 2, .z = 3 };
+    const v = Self{ .x = 1, .y = 2, .z = 3 };
     const result = v.negate();
     try expectEq(-1, result.x);
     try expectEq(-2, result.y);
@@ -85,27 +85,27 @@ test "negate" {
 }
 
 test "len_sq" {
-    const v = Vec3{ .x = 2, .y = 0, .z = 0 };
+    const v = Self{ .x = 2, .y = 0, .z = 0 };
     const result = v.len_sq();
     try expectEq(4, result);
 }
 
 test "len" {
-    const v = Vec3{ .x = 2, .y = 0, .z = 0 };
+    const v = Self{ .x = 2, .y = 0, .z = 0 };
     const result = v.len();
     try expectEq(2, result);
 }
 
 test "dot" {
-    const a = Vec3{ .x = 1, .y = 2, .z = 3 };
-    const b = Vec3{ .x = 4, .y = 5, .z = 6 };
+    const a = Self{ .x = 1, .y = 2, .z = 3 };
+    const b = Self{ .x = 4, .y = 5, .z = 6 };
     const result = a.dot(b);
     try expectEq(32, result);
 }
 
 test "cross" {
-    const a = Vec3{ .x = 1, .y = 0, .z = 0 };
-    const b = Vec3{ .x = 0, .y = 1, .z = 0 };
+    const a = Self{ .x = 1, .y = 0, .z = 0 };
+    const b = Self{ .x = 0, .y = 1, .z = 0 };
     const result = a.cross(b);
     try expectEq(0, result.x);
     try expectEq(0, result.y);
@@ -113,7 +113,7 @@ test "cross" {
 }
 
 test "unit" {
-    const v = Vec3{ .x = 3, .y = 0, .z = 0 };
+    const v = Self{ .x = 3, .y = 0, .z = 0 };
     const result = v.unit();
     try expectEq(1, result.len());
 }
